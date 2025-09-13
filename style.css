@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: #eee;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #000;
+}
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background: #222;
+}
+.tabs button {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: #ccc;
+}
+.tabs button.active {
+  background: #444;
+  color: #fff;
+}
+.tab-content { display: none; padding: 10px; }
+.tab-content.active { display: block; }
