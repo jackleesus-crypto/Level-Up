@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ShadowHUD</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#0f0f16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span>ShadowHUD</span> <small id="version">v13.4</small></div>
+    <div class="gold" title="Gold"><span class="coin">🪙</span><span id="goldDisplay">0</span></div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="quest">Quest</button>
+    <button class="tab" data-tab="journey">Journey</button>
+    <button class="tab" data-tab="character">Character</button>
+    <button class="tab" data-tab="store">Store</button>
+    <button class="tab" data-tab="focus">Focus</button>
+  </nav>
+
+  <main>
+    <!-- QUEST -->
+    <section class="view active" id="view-quest">
+      <div class="section-title">Quests</div>
+      <div class="chip-row" id="questFilters">
+        <button class="chip on" data-filter="all">All</button>
+        <button class="chip" data-filter="daily">Daily</button>
+        <button class="chip" data-filter="penalty">Penalty</button>
+        <button class="chip" data-filter="active">Active</button>
+        <button class="chip" data-filter="done">Done</button>
+        <button class="chip primary" id="addQuestBtn">＋</button>
+      </div>
+      <div id="quests"></div>
+    </section>
+
+    <!-- JOURNEY -->
+    <section class="view" id="view-journey">
+      <div class="section-title">Journey</div>
+      <div class="card">
+        <div class="row space">
+          <div>Level <span id="levelLabel">1</span> · <span id="rankLabel">E</span></div>
+          <div><span id="xpLabel">0</span>/<span id="xpToLevel">47</span> XP</div>
+        </div>
+        <div class="progress"><div id="xpBar" class="bar" style="width:0%"></div></div>
+        <div class="row stats">
+          <div><small>Completed</small><div id="statCompleted">0</div></div>
+          <div><small>Streak</small><div id="statStreak">0</div></div>
+          <div><small>Gold</small><div id="statGold">0</div></div>
+        </div>
+      </div>
+
+      <div class="section-sub">Titles</div>
+      <div id="titles" class="titles"></div>
+
+      <div class="section-sub">Achievements</div>
+      <div id="achievements" class="achievements"></div>
+    </section>
+
+    <!-- CHARACTER -->
+    <section class="view" id="view-character">
+      <div class="section-title">Character</div>
+      <div class="row space pillrow">
+        <div class="pill dark">Title: <span id="equippedTitle">None</span></div>
+        <button class="chip" id="changeTitleBtn">Change</button>
+      </div>
+
+      <div class="card">
+        <div class="row space">
+          <div class="badge rank">E</div>
+          <div class="lvl">Level <span id="levelLabel2">1</span></div>
+          <div class="xpRight"><span id="xpLabel2">0</span>/<span id="xpToLevel2">47</span> XP</div>
+        </div>
+        <div class="progress"><div id="xpBar2" class="bar" style="width:0%"></div></div>
+      </div>
+
+      <div class="card">
+        <canvas id="attrChart" height="250"></canvas>
+      </div>
+
+      <div class="grid attrs" id="attrGrid">
+        <!-- attribute tiles injected -->
+      </div>
+    </section>
+
+    <!-- STORE -->
+    <section class="view" id="view-store">
+      <div class="section-title">Store</div>
+      <div class="card">
+        <div class="row">
+          <input id="newRewardTitle" placeholder="Title">
+          <input id="newRewardCost" placeholder="Cost (Gold)" type="number" value="50" min="1">
+          <button class="btn primary" id="saveReward">Save</button>
+        </div>
+      </div>
+      <div id="storeList"></div>
+    </section>
+
+    <!-- FOCUS -->
+    <section class="view" id="view-focus">
+      <div class="section-title">Focus</div>
+      <div class="card focus">
+        <div class="row">
+          <label for="focusMinutes">Minutes</label>
+          <input id="focusMinutes" type="number" min="1" value="25">
+        </div>
+        <div class="big" id="focusTimer">25:00</div>
+        <div class="row btnrow">
+          <button class="btn primary" id="startFocus">Start</button>
+          <button class="btn" id="pauseFocus">Pause</button>
+          <button class="btn" id="resumeFocus">Resume</button>
+          <button class="btn danger" id="cancelFocus">Cancel</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="questEditor">
+    <form method="dialog">
+      <h3>New/Edit Quest</h3>
+      <label>Title<input id="qeTitle"></label>
+      <label>Description<input id="qeDesc" placeholder="Optional"></label>
+      <label>Type
+        <select id="qeType">
+          <option value="timer">Timer</option>
+          <option value="count">Count</option>
+          <option value="multi">Multi-counter</option>
+          <option value="checklist">Checklist</option>
+        </select>
+      </label>
+      <label>Attribute tags (comma, e.g. physical,intellect)<input id="qeAttrs" placeholder="physical"></label>
+      <label>Base Reward XP<input id="qeXP" type="number" value="20"></label>
+      <label>Gold<input id="qeGold" type="number" value="10"></label>
+      <label>Daily <input id="qeDaily" type="checkbox" checked></label>
+      <menu>
+        <button class="btn" value="cancel">Cancel</button>
+        <button class="btn primary" id="qeSave" value="default">Save</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="titlePicker">
+    <form method="dialog">
+      <h3>Choose Title</h3>
+      <div id="titleChoices"></div>
+      <menu>
+        <button class="btn" value="cancel">Close</button>
+      </menu>
+    </form>
+  </dialog>
+</body>
+</html>

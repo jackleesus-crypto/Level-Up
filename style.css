@@ -1,0 +1,69 @@
+/* ShadowHUD v13 – mobile-first */
+:root{
+  --bg:#0f1017; --panel:#151726; --panel2:#10121d;
+  --text:#e9e9f6; --muted:#b6b6cc; --brand:#9b8cff; --brand-2:#6f66d9;
+  --chip:#23253b; --chip-on:#3b2f64; --good:#1fbf75; --warn:#e2a23b; --bad:#e05a5a;
+  --pill:#24263b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,"Helvetica Neue",Arial}
+small{color:var(--muted)}
+.topbar{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:linear-gradient(to bottom, #0f1017e6, #0f101780);backdrop-filter:blur(10px)}
+.brand{font-size:24px;font-weight:700;letter-spacing:.3px}
+.brand small{margin-left:6px;color:#c6c4ff;opacity:.8}
+.gold{display:flex;align-items:center;gap:6px}
+.coin{filter:grayscale(0);}
+.tabs{display:flex;gap:12px;justify-content:center;padding:10px 12px;flex-wrap:wrap}
+.tab{background:var(--pill);border:1px solid #2c2f4a;color:var(--text);padding:10px 16px;border-radius:16px;min-width:110px}
+.tab.active{outline:2px solid var(--brand)}
+main{padding:10px 12px 80px}
+.section-title{font-size:22px;font-weight:800;margin:6px 6px 10px}
+.section-sub{margin:12px 6px 6px;color:var(--muted)}
+.card{background:var(--panel);border:1px solid #262a46;border-radius:18px;padding:14px;margin:10px 6px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.space{justify-content:space-between}
+.progress{height:6px;background:#1a1d30;border-radius:6px;overflow:hidden;margin-top:8px}
+.progress .bar{height:100%;background:linear-gradient(90deg,#745cff,#9a8cff)}
+.grid.attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:6px}
+.attr{background:var(--panel);border:1px solid #303458;border-radius:20px;padding:20px;text-align:center}
+.attr .n{font-size:30px;font-weight:800}
+.attr .lbl{margin-top:8px;color:var(--muted);letter-spacing:1.2px}
+.pillrow .pill{padding:10px 12px;border-radius:14px;background:var(--panel2);border:1px solid #282b46}
+.badge.rank{background:#20223a;border:1px solid #2f3255;border-radius:12px;padding:8px 12px;font-weight:800}
+.lvl{font-weight:700}
+.xpRight{color:var(--muted)}
+.view{display:none}
+.view.active{display:block}
+.chip-row{display:flex;gap:10px;flex-wrap:wrap;margin:4px 6px 8px}
+.chip{background:var(--chip);border:1px solid #2c2f4a;color:var(--text);padding:8px 14px;border-radius:16px}
+.chip.on{outline:2px solid var(--brand)}
+.chip.primary{background:var(--brand-2)}
+.btn{background:#2a2d49;border:1px solid #34385d;color:var(--text);padding:10px 14px;border-radius:14px}
+.btn.primary{background:var(--brand-2);border-color:#8a80ff}
+.btn.danger{background:var(--bad);border-color:#e76868}
+.btn.good{background:var(--good);border-color:#30d28b}
+.btn.warn{background:var(--warn);border-color:#f1b75a}
+.btnrow .btn{flex:1}
+.focus .big{font-size:42px;font-weight:800;text-align:center;margin:10px 0}
+.quest{background:var(--panel);border:1px solid #2b2f4d;border-radius:22px;padding:16px;margin:12px 6px}
+.quest .title{font-size:22px;font-weight:800}
+.quest .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.quest .meta .chip{padding:6px 10px;border-radius:12px}
+.quest .ctrRow{display:flex;gap:8px;align-items:center;margin:8px 0}
+.quest .pillbtn{padding:10px 14px;border-radius:14px;background:#6f66d9;border:1px solid #8a80ff;color:#fff}
+.quest .sbtn{padding:8px 10px;border-radius:12px;min-width:44px;text-align:center;border:1px solid #3b3f63;background:#242742}
+.quest .finish{background:#856dff;border-color:#9d90ff}
+.titles, .achievements{display:flex;gap:10px;flex-wrap:wrap;margin:6px}
+.titleCard{background:var(--panel);border:1px solid #2c2f4a;border-radius:16px;padding:10px 12px}
+.titleCard .name{font-weight:800}
+#titleChoices .titleCard{cursor:pointer}
+dialog{border:none;border-radius:16px;padding:0}
+dialog form{padding:16px;background:var(--panel);color:var(--text);min-width:320px}
+dialog h3{margin-top:0}
+dialog label{display:flex;flex-direction:column;gap:6px;margin:6px 0}
+dialog input, dialog select{background:#1a1c2f;border:1px solid #2c3152;border-radius:12px;color:var(--text);padding:10px}
+menu{display:flex;gap:10px;justify-content:flex-end;margin:8px 0 0}
+@media (max-width:380px){
+  .grid.attrs{grid-template-columns:repeat(2,1fr)}
+  .tab{min-width:100px}
+}
