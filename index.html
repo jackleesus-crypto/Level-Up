@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ShadowHUD</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#0f1017">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="hud-bar">
+    <div class="brand">ShadowHUD <span class="version">v13.1</span></div>
+    <div class="gold"><span class="coin">💰</span> <span id="goldDisplay">0</span></div>
+  </header>
+
+  <nav class="top-tabs" id="tabs">
+    <button class="tab-btn active" data-tab="quest">Quest</button>
+    <button class="tab-btn" data-tab="journey">Journey</button>
+    <button class="tab-btn" data-tab="character">Character</button>
+    <button class="tab-btn" data-tab="store">Store</button>
+    <button class="tab-btn" data-tab="focus">Focus</button>
+  </nav>
+
+  <main id="views">
+    <!-- QUEST VIEW -->
+    <section class="view active" id="view-quest">
+      <h2>Quests</h2>
+      <div class="filters" id="questFilters">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="daily">Daily</button>
+        <button class="chip" data-filter="penalty">Penalty</button>
+        <button class="chip" data-filter="active">Active</button>
+        <button class="chip" data-filter="done">Done</button>
+      </div>
+      <div id="questList" class="stack"></div>
+      <button class="fab" id="addQuestFab">+</button>
+      <dialog id="questDialog">
+        <form id="questForm" method="dialog">
+          <h3 id="questFormTitle">New Quest</h3>
+          <label>Title <input name="title" required></label>
+          <label>Description <input name="desc" placeholder="Optional"></label>
+          <label>Type
+            <select name="type">
+              <option value="timer">Timer</option>
+              <option value="counter">Counter</option>
+              <option value="multi">Multi-counter</option>
+            </select>
+          </label>
+          <div class="row">
+            <label>Duration (min) <input type="number" name="minutes" value="25"></label>
+            <label>Target Count <input type="number" name="target" value="10"></label>
+          </div>
+          <label>Multi items (label:target, comma)
+            <input name="multi" placeholder="Pushups:100, Sit-ups:100, Squats:100, Run(miles):1">
+          </label>
+          <div class="row">
+            <label>Difficulty
+              <select name="difficulty">
+                <option>Easy</option><option>Normal</option><option>Hard</option><option>Elite</option>
+              </select>
+            </label>
+            <label>Daily?
+              <select name="daily"><option value="no">No</option><option value="yes">Yes</option></select>
+            </label>
+          </div>
+          <label>Attributes (multi, comma)
+            <input name="attrs" placeholder="physical, intellect">
+          </label>
+          <div class="row">
+            <label>Base XP <input type="number" name="xp" value="20"></label>
+            <label>Gold <input type="number" name="gold" value="10"></label>
+          </div>
+          <menu>
+            <button class="btn btn-ghost" value="cancel">Cancel</button>
+            <button class="btn btn-primary" value="default">Save</button>
+          </menu>
+        </form>
+      </dialog>
+    </section>
+
+    <!-- JOURNEY VIEW -->
+    <section class="view" id="view-journey">
+      <h2>Journey</h2>
+      <div class="card">
+        <div class="row wrap">
+          <div>Level <span id="levelText">1</span> · <span id="rankText">E</span></div>
+          <div><span id="xpText">0/0</span> XP</div>
+          <div>Completed <span id="completedCount">0</span></div>
+          <div>Streak <span id="streakCount">0</span></div>
+          <div>Gold <span id="goldText2">0</span></div>
+        </div>
+        <div class="bar"><div id="xpBar" style="width:0%"></div></div>
+      </div>
+
+      <h3>Titles</h3>
+      <div id="titleList" class="stack"></div>
+    </section>
+
+    <!-- CHARACTER VIEW -->
+    <section class="view" id="view-character">
+      <h2>Character</h2>
+      <div class="card row space-between">
+        <div class="pill"><span class="coin">💰</span> <span id="goldText3">0</span></div>
+        <div class="pill">⭐ Unspent AP: <span id="apText">0</span></div>
+      </div>
+
+      <div class="card row space-between">
+        <div class="row gap">
+          <div class="rank-badge">E</div>
+          <div>
+            <div class="h4">Level <span id="levelText2">1</span></div>
+            <div class="muted">Rank E</div>
+          </div>
+        </div>
+        <div class="xp-block">
+          <div class="bar"><div id="xpBar2" style="width:0%"></div></div>
+          <div class="muted right"><span id="xpText2">0/0</span> XP</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row space-between">
+          <div>Title: <b id="equippedTitle">None</b></div>
+          <button id="changeTitleBtn" class="btn btn-ghost btn-sm">Change</button>
+        </div>
+      </div>
+
+      <section class="card radar-card">
+        <div class="radar-wrap"><canvas id="attrRadar"></canvas></div>
+      </section>
+
+      <section class="grid attributes-grid">
+        <div class="stat"><div id="attr-physical">0</div><span>PHYSICAL</span><button class="btn btn-ghost btn-sm add-attr" data-attr="physical">+</button></div>
+        <div class="stat"><div id="attr-psyche">0</div><span>PSYCHE</span><button class="btn btn-ghost btn-sm add-attr" data-attr="psyche">+</button></div>
+        <div class="stat"><div id="attr-intellect">0</div><span>INTELLECT</span><button class="btn btn-ghost btn-sm add-attr" data-attr="intellect">+</button></div>
+        <div class="stat"><div id="attr-social">0</div><span>SOCIAL</span><button class="btn btn-ghost btn-sm add-attr" data-attr="social">+</button></div>
+        <div class="stat"><div id="attr-spiritual">0</div><span>SPIRITUAL</span><button class="btn btn-ghost btn-sm add-attr" data-attr="spiritual">+</button></div>
+        <div class="stat"><div id="attr-financial">0</div><span>FINANCIAL</span><button class="btn btn-ghost btn-sm add-attr" data-attr="financial">+</button></div>
+      </section>
+    </section>
+
+    <!-- STORE VIEW -->
+    <section class="view" id="view-store">
+      <h2>Store</h2>
+      <div class="card">
+        <div>Gold: <b id="goldText4">0</b></div>
+      </div>
+      <div id="storeList" class="stack"></div>
+      <h3>New Reward</h3>
+      <div class="card">
+        <label>Title <input id="rewardTitle"></label>
+        <label>Cost (Gold) <input type="number" id="rewardCost" value="50"></label>
+        <div class="row right">
+          <button class="btn btn-primary" id="saveReward">Save</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOCUS VIEW -->
+    <section class="view" id="view-focus">
+      <h2>Focus</h2>
+      <div class="card">
+        <label>Minutes <input id="focusMinutes" type="number" value="25"></label>
+        <div class="focus-time" id="focusTime">25:00</div>
+        <div class="row wrap gap">
+          <button class="btn btn-primary" id="focusStart">Start</button>
+          <button class="btn" id="focusPause">Pause</button>
+          <button class="btn" id="focusResume">Resume</button>
+          <button class="btn btn-warning" id="focusCancel">Cancel</button>
+        </div>
+      </div>
+      <p class="muted">Simple timer. No app locking.</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
